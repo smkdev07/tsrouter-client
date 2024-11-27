@@ -1,0 +1,38 @@
+{
+    "platform-dev": {
+        "dns_config": {
+            "service-hostname": {
+                "feature_name": "service-hostname",
+                "should_create_internal": "true",
+                "subdomain_override": "tsrouter_client"
+            }
+        },
+        "github_repo": {
+            "manifests-repo": {
+                "slack_notifications_channel": "team-sre-alerts"
+            }
+        },
+        "sa_config": {
+            "service-account": {}
+        },
+        "service_name": "tsrouter-client"
+    },
+    "platform-prod": {
+        "dns_config": {
+            "service-hostname": {
+                "feature_name": "service-hostname",
+                "should_create_internal": "true",
+                "subdomain_override": "tsrouter_client"
+            }
+        },
+        "github_repo": {
+            "manifests-repo": {
+                "slack_notifications_channel": "team-sre-alerts"
+            }
+        },
+        "sa_config": {
+            "service-account": {}
+        },
+        "service_name": "tsrouter-client"
+    }
+}

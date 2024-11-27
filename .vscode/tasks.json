@@ -1,0 +1,184 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "run",
+            "detail": "Default action to run the project locally.",
+            "dependsOn": [
+                "web"
+            ],
+            "presentation": {},
+            "problemMatcher": []
+        },
+        {
+            "label": "lint",
+            "detail": "Run static analysis over the project's code to identify potential problems.",
+            "type": "shell",
+            "command": "npm",
+            "args": [
+                "run",
+                "lint",
+                "--",
+                "${input:lintFix}"
+            ],
+            "presentation": {
+                "focus": true,
+                "reveal": "always",
+                "panel": "shared",
+                "group": "output"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "test",
+            "detail": "Run all of the project tests and generate code coverage.",
+            "type": "shell",
+            "command": "npm run test:ci",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "focus": true,
+                "panel": "shared",
+                "group": "test"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "cypress",
+            "detail": "Start the Cypress UI for manual testing.",
+            "type": "shell",
+            "command": "npm run test:cypress",
+            "group": "test",
+            "presentation": {
+                "focus": true,
+                "panel": "shared",
+                "group": "test"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "jest",
+            "detail": "Run the Jest-based tests.",
+            "type": "shell",
+            "command": "/orm/devcontainer/base/scripts/run-task.sh",
+            "args": [
+                "env.tests",
+                "npx",
+                "jest",
+                "--all",
+                "${input:jestWatch}"
+            ],
+            "group": "test",
+            "presentation": {
+                "focus": true,
+                "panel": "shared",
+                "group": "test"
+            },
+            "runOptions": {
+                "reevaluateOnRerun": false
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "web",
+            "detail": "Runs the web server in development mode.",
+            "type": "shell",
+            "command": "npm run start:dev",
+            "presentation": {
+                "focus": true,
+                "reveal": "always",
+                "panel": "shared",
+                "group": "output"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "web:cypress-target",
+            "detail": "Runs the server in manner that allows Cypress to tests against it.",
+            "type": "shell",
+            "command": "npx",
+            "args": [
+                "chassis",
+                "cypress",
+                "--cmd",
+                "target-only",
+                "${input:webCypressTargetBuild}",
+                "--target-mode",
+                "${input:webCypressTargetMode}"
+            ],
+            "presentation": {
+                "focus": true,
+                "reveal": "always",
+                "panel": "shared",
+                "group": "output"
+            },
+            "runOptions": {
+                "reevaluateOnRerun": false
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "dev-container:initialize",
+            "detail": "Ensures that the local environment has all the necessary configuration for the Dev Container. Run automatically when a project is opened.",
+            "type": "shell",
+            "command": "${workspaceFolder}/.devcontainer/initialize.sh",
+            "presentation": {
+                "echo": false,
+                "reveal": "silent",
+                "focus": false,
+                "close": true
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
+            },
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "id": "jestWatch",
+            "type": "pickString",
+            "description": "Watch tests?",
+            "options": [
+                "--watchAll",
+                "--watch",
+                "--no-watch"
+            ],
+            "default": "--no-watch"
+        },
+        {
+            "id": "lintFix",
+            "type": "pickString",
+            "description": "Try to automatically fix linting errors?",
+            "options": [
+                "--fix",
+                "--no-fix"
+            ],
+            "default": "--no-fix"
+        },
+        {
+            "id": "webCypressTargetBuild",
+            "type": "pickString",
+            "description": "Build the server bundles prior to starting the web server?",
+            "options": [
+                "--build",
+                "--no-build"
+            ],
+            "default": "--build"
+        },
+        {
+            "id": "webCypressTargetMode",
+            "type": "pickString",
+            "description": "Run the server in production or development mode?",
+            "options": [
+                "prod",
+                "dev"
+            ],
+            "default": "prod"
+        }
+    ]
+}

@@ -1,0 +1,8 @@
+{
+  "test": {
+    "parameters": {
+      "agent_count": "1"
+    },
+    "template": "js-frontend-test"
+  }
+}

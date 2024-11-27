@@ -1,0 +1,41 @@
+# This file is automatically created by the `regen` command.
+# To make changes please edit the `SERVICE_FEATURES` setting.
+# See https://devdocs.common-build.gcp.oreilly.com/chassis/features.html#service-features-setting
+name: tsrouter-client_devcontainer
+networks:
+  default:
+    external: true
+    name: platform
+services:
+  workspace:
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    environment:
+      DD_TRACE_ENABLED: 'False'
+      DJANGO_SETTINGS_MODULE: tsrouter_client.settings
+      IPYTHONDIR: /orm/service/.ipython/
+      ORM_SERVICE_NAME: tsrouter-client
+      PYTHONPATH: /orm/:/orm/service/:/orm/chassis/
+      SSH_AUTH_SOCK: /run/host-services/ssh-auth.sock
+    image: us-central1-docker.pkg.dev/common-build/orm-hub/orm-devcontainer-chassis:latest
+    labels:
+    - traefik.docker.network=platform
+    - traefik.enable=true
+    - traefik.http.routers.tsrouter-client--web--learning-oreilly.rule=Host(`learning.oreilly.local`)
+      && PathPrefix(`/science`)
+    - traefik.http.routers.tsrouter-client--web--learning-oreilly.tls=True
+    networks:
+      default: {}
+    ports:
+    - 9753:9999
+    volumes:
+    - source: ..
+      target: /orm/service
+      type: bind
+    - source: /run/host-services/ssh-auth.sock
+      target: /run/host-services/ssh-auth.sock
+      type: bind
+    - source: node-modules
+      target: /orm/service/node_modules
+      type: volume
+volumes:
+  node-modules: {}

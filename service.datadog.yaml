@@ -1,0 +1,12 @@
+# This file is automatically created by the `regen` command.
+application: tsrouter-client
+dd-service: tsrouter-client
+description: ''
+links:
+- name: Github Repo
+  provider: github
+  type: repo
+  url: https://github.com/oreillymedia/tsrouter-client
+schema-version: v2.1
+tags: []
+team: oreillymedia-

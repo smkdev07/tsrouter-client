@@ -1,0 +1,24 @@
+name: LaunchDarkly code references
+on:
+  push:
+     branches-ignore:
+      - 'renovate/**'
+      - 'maintenance-**'
+      - 'orm-vulnerability-patcher/**'
+# cancel any in-flight workflow if a new one is triggered
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  launchDarklyCodeReferences:
+    name: LaunchDarkly code references
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 10 # This value must be set if the lookback configuration option is not disabled for find-code-references. Read more: https://github.com/launchdarkly/ld-find-code-references#searching-for-unused-flags-extinctions
+      - name: LaunchDarkly code references
+        if: "!contains(github.event.issue.labels.*.name, 'maintenance')"
+        uses: launchdarkly/find-code-references@v2.10.0
+        with:
+          accessToken: ${{ secrets.LAUNCH_DARKLY_CODE_REFS_SECRET }}

@@ -1,0 +1,4 @@
+{
+  "__comment": "These are ESM-only libraries that should be transformed for Jest, as it only functions in CommonJS mode.",
+  "libraries": []
+}

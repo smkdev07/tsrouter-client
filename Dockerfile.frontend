@@ -1,0 +1,26 @@
+# This file is automatically created by the `regen` command.
+# To make changes please edit the `SERVICE_DOCKERFILES` setting.
+# See https://devdocs.common-build.gcp.oreilly.com/chassis/dockerfile.html#dockerfiles
+FROM us-central1-docker.pkg.dev/common-build/orm-hub/chassis-node-default:latest AS unbuilt_base
+ARG DD_GIT_REPOSITORY_URL
+ARG DD_GIT_COMMIT_SHA
+ENV DD_GIT_REPOSITORY_URL=${DD_GIT_REPOSITORY_URL}
+ENV DD_GIT_COMMIT_SHA=${DD_GIT_COMMIT_SHA}
+ENV PATH=$PATH:/orm/service/node_modules/.bin
+ENV ADBLOCK=1
+ENV CI=1
+WORKDIR /orm/service/
+COPY package*.json .npmrc* ./
+RUN npm ci
+COPY . /orm/service/
+COPY ./src/assets/. /orm/service/dist/client/
+FROM us-central1-docker.pkg.dev/common-build/orm-hub/chassis-cypress:latest AS cypress
+WORKDIR /orm/service/
+COPY --from=unbuilt_base /orm/service/ /orm/service/
+# Cypress target
+FROM unbuilt_base AS cypress-target
+WORKDIR /orm/service/
+RUN BABEL_ENV=cypress npm run build
+# Production application
+FROM unbuilt_base as built_application
+RUN npm run build

@@ -1,0 +1,5 @@
+projects:
+    - key: platform
+      dir: src
+      aliases:
+         - type: camelcase

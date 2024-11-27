@@ -1,0 +1,10 @@
+{
+  "typeAcquisition": {
+    "include": [
+      "cypress",
+      "@testing-library/cypress",
+      "@oreillymedia/msw-integration/types/cypress",
+      "@oreillymedia/fef-server/types/cypress"
+    ]
+  }
+}

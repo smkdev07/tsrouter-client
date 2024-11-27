@@ -1,0 +1,42 @@
+// See https://aka.ms/vscode-remote/devcontainer.json for format details.
+{
+  "name": "Tsrouter Client",
+  "dockerComposeFile": [
+    "docker-compose.yml",
+    "docker-compose.local.yml"
+  ],
+  "mounts": [
+    // Bind the chassis configuration.
+    "type=bind,source=${localEnv:HOME}/.chassis,target=/home/developer/.chassis",
+    // Bind ssh keys
+    "type=bind,source=${localEnv:HOME}/.ssh,target=/home/developer/.ssh",
+    // Bind gcloud config.
+    "type=bind,source=${localEnv:HOME}/.config/devcontainer/gcloud,target=/home/developer/.config/gcloud"
+  ],
+  "service": "workspace",
+  "workspaceFolder": "/orm/service",
+  // Run when a new Dev Container instance is created.
+  "postCreateCommand": "/orm/devcontainer/chassis/scripts/post-create.sh ${containerWorkspaceFolder}",
+  // Run whenever the Dev Container is initially started or restarted from a
+  // stopped state.
+  "postStartCommand": "/orm/devcontainer/chassis/scripts/post-start.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "EditorConfig.EditorConfig",
+        "esbenp.prettier-vscode",
+        "mikestead.dotenv"
+      ],
+      "settings": {
+        "eslint.workingDirectories": [
+          {
+            "mode": "auto"
+          }
+        ],
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "window.title": "${activeEditorShort}${separator}Tsrouter Client"
+      }
+    }
+  }
+}

@@ -1,0 +1,60 @@
+*~
+__pycache__
+*.pyc
+*.secret.*
+
+# Add a docker-compose.override.yml to set local secrets in the containers
+docker-compose.override.yml
+
+# IDE related files
+.idea
+.coverage
+cov.xml
+.cov.xml
+.environment
+.userid
+*.sublime-*
+
+# Test coverage files
+coverage
+test-report.xml
+junit.xml
+cypress/videos/
+cypress/screenshots/
+.nyc_output/
+
+# Temporary storage
+.DS_Store
+temp/
+*.tgz
+
+# generated directories for deployment pipeline
+istio-system/
+kube/
+
+
+# Frontend files
+dist/
+node_modules/
+env.debug
+
+# Dev Container Related Config
+.vscode/*
+!/.vscode/launch.json
+!/.vscode/tasks.json
+devsecrets.json
+docker-compose.local.yml
+
+# Terraform metadata directory
+**/.terraform/*
+
+# All terraform plan files
+**/tf-plan-file
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# .tfvars files - ignored b/c we template them out
+*.tfvars
+*.tfvars.json

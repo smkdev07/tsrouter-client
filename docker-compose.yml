@@ -1,0 +1,101 @@
+# This file is automatically created by the `regen` command.
+# To make changes please edit the `SERVICE_FEATURES` setting.
+# See https://devdocs.common-build.gcp.oreilly.com/chassis/features.html#service-features-setting
+networks:
+  default:
+    name: tsrouter-client
+  platform:
+    external: true
+secrets:
+  gcloud_credentials:
+    external: true
+    file: ${HOME}/.config/gcloud/application_default_credentials.json
+services:
+  cypress-target:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+      target: cypress-target
+    command: /orm/service/src/bootstrap.js
+    entrypoint: /usr/local/bin/node
+    env_file: env.tests
+    healthcheck:
+      interval: 10s
+      retries: 6
+      test:
+      - CMD
+      - curl
+      - -f
+      - http://localhost:9999/health/ready
+      timeout: 5s
+    labels:
+    - traefik.docker.network=platform
+    - traefik.enable=true
+    - traefik.http.routers.tsrouter-client--cypress-target--learning-oreilly.rule=Host(`learning.oreilly.local`)
+      && PathPrefix(`/science`)
+    - traefik.http.routers.tsrouter-client--cypress-target--learning-oreilly.tls=True
+    networks:
+      default: {}
+      platform:
+        aliases:
+        - tsrouter-client
+    ports:
+    - 9469:9999
+  manage:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      secrets:
+      - gcloud_credentials
+    command: shell_plus
+    entrypoint: /usr/local/bin/python /orm/manage.py
+    env_file: env.local
+    environment:
+      DD_TRACE_ENABLED: 'False'
+    networks:
+      default: {}
+      platform: {}
+    volumes:
+    - ~/.chassis:/root/.chassis
+    - ./:/orm/service:consistent
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+      target: cypress
+    command: run test:ci
+    depends_on:
+      cypress-target:
+        condition: service_healthy
+    entrypoint: /usr/local/bin/npm
+    env_file: env.tests
+    environment:
+      CYPRESS_BASE_URL: http://cypress-target:9999
+    restart: 'no'
+    volumes:
+    - ./src/coverage:/orm/service/src/coverage
+    - ./cypress:/orm/service/cypress
+    - ./cypress.config.cjs:/orm/service/cypress.config.cjs
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    command: run start:dev
+    entrypoint: /usr/local/bin/npm
+    env_file: env.local
+    labels:
+    - traefik.docker.network=platform
+    - traefik.enable=true
+    - traefik.http.routers.tsrouter-client--web--learning-oreilly.rule=Host(`learning.oreilly.local`)
+      && PathPrefix(`/science`)
+    - traefik.http.routers.tsrouter-client--web--learning-oreilly.tls=True
+    networks:
+      default: {}
+      platform:
+        aliases:
+        - tsrouter-client
+    ports:
+    - 9753:9999
+    volumes:
+    - ./src/assets:/orm/service/dist/client
+    - ./:/orm/service:delegated

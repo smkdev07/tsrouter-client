@@ -1,0 +1,42 @@
+{
+  "chassis_project_type": "js_frontend",
+  "chassis_version": "latest",
+  "deploy_version": 2,
+  "description": "",
+  "enable_apm_on": [
+    "prod-gke",
+    "dev-gke"
+  ],
+  "frontend_path": "/science",
+  "github_repo": "git@github.com:oreillymedia/tsrouter-client.git",
+  "jenkins": {
+    "ci_customization": "v2_frontend_application",
+    "deploy_releases_to": [
+      "prod-gke"
+    ],
+    "deploy_stable_to": [
+      "dev-gke"
+    ],
+    "periodic_deploy": [
+      "stable"
+    ],
+    "published_branches": [
+      "main"
+    ],
+    "stable_branch": "main",
+    "test_artifact_paths": [
+      "cypress/screenshots",
+      "cypress/videos"
+    ]
+  },
+  "kubedir": "kube",
+  "name": "tsrouter_client",
+  "namespace": "tsrouter-client",
+  "ports": {
+    "cypress-target": 9469,
+    "web": 9753
+  },
+  "service_tier": "D",
+  "team": "Web Flex 4",
+  "upgrade_js": false
+}
